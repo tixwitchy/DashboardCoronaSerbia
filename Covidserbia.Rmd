@@ -1,0 +1,168 @@
+---
+title: "COVID-19 Srbija statistika na dan"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+date: '`r format(Sys.Date()-1, "%d. %m. %Y.")`'
+
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(leaflet)
+library(readxl)
+library(tidyverse)
+library(writexl)
+library(httr)
+library(plotly)
+library(crosstalk)
+library(rvest)
+
+
+
+url1<-"https://data.gov.rs/sr/datasets/r/1977833a-36f2-445e-916a-ef51b217d3a0"
+GET(url1, write_disk(tf <- tempfile(fileext = ".xlsx")))
+covidserbia <- read_excel(tf)
+str(covidserbia)
+
+#importing longitude and latitude
+municipalitiescsv<-read_csv("Longitude and latitude for cities.csv",col_names = TRUE)
+
+municipalitiescsv1<-municipalitiescsv%>%
+  rename(NazivTeritorije=city)%>%
+  select(-X1)
+
+#changing several towns
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="ČAČAK-GRAD"]="ČAČAK"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="JAGODINA-GRAD"]="JAGODINA"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="KIKINDA-GRAD"]="KIKINDA"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="KRAGUJEVAC-GRAD"]="KRAGUJEVAC"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="KRUŠEVAC-GRAD"]="KRUŠEVAC"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="LESKOVAC-GRAD"]="LESKOVAC"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="LOZNICA-GRAD"]="LOZNICA"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="NOVI PAZAR-GRAD"]="NOVI PAZAR"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="PANČEVO-GRAD"]="PANČEVO"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="PRIŠTINA-GRAD"]="PRIŠTINA"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="PIROT-GRAD"]="PIROT"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="ŠABAC-GRAD"]="ŠABAC"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="SMEDEREVO-GRAD"]="SMEDEREVO"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="SOMBOR-GRAD"]="SOMBOR"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="SREMSKA MITROVICA-GRAD"]="SREMSKA MITROVICA"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="SUBOTICA-GRAD"]="SUBOTICA"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="VALJEVO-GRAD"]="VALJEVO"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="VRŠAC-GRAD"]="VRŠAC"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="ZAJEČAR-GRAD"]="ZAJEČAR"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="ZRENJANIN-GRAD"]="ZRENJANIN"
+covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="KRALJEVO-GRAD"]="KRALJEVO"
+
+
+
+
+covidserbialonglat<-left_join(covidserbia,municipalitiescsv1,by="NazivTeritorije")
+
+apply(covidserbialonglat, 2, function(x) any(is.na(x)))
+#checking if here are any duplicates check
+duplicated(covidserbialonglat)
+
+covidserbiamap<-covidserbialonglat%>%
+  filter(covidserbialonglat$Tip=="ZAR_DAN"& covidserbialonglat$NazivTeritorije!="Republika Srbija",covidserbialonglat$Vrednost>0)%>%
+  select(-c(Sifra,IDTeritorije))%>%
+  group_by(NazivTeritorije)%>%
+  summarise(sum(Vrednost))
+ 
+covidserbiamap<-left_join(covidserbiamap,municipalitiescsv1,by="NazivTeritorije")
+
+
+icon2<-awesomeIcons(icon="genderless",library="fa",markerColor = "red")
+
+covidserbialinechart<-covidserbialonglat%>%
+  filter(covidserbialonglat$Tip=="ZAR_DAN"& covidserbialonglat$Vrednost>0)%>%
+  select(-c(Sifra,IDTeritorije))%>%
+  mutate(Datum=paste(Godina,Mesec,Dan,sep = "/"))
+
+covidserbialinechart$NazivTeritorije[covidserbialinechart$NazivTeritorije=="Republika Srbija"]<-"SVI GRADOVI"
+
+covidserbialinechart$Datum<-as.Date(covidserbialinechart$Datum)
+
+covidserbialinechart<-covidserbialinechart%>%
+  group_by(NazivTeritorije,Datum)%>%
+  summarise(sum(Vrednost))%>%
+  ungroup()
+
+covidserbialinechart<-covidserbialinechart%>%
+  mutate(Info=paste("<br>","Grad:",NazivTeritorije, "<br>","Datum:",Datum, "<br>","Broj slucajeva:",`sum(Vrednost)`, "<br>"))
+
+#scraping number of dead
+
+my_html<-read_html("https://covid19.rs/%d1%81%d1%82%d0%b0%d1%82%d0%b8%d1%81%d1%82%d0%b8%d1%87%d0%ba%d0%b8-%d0%bf%d0%be%d0%b4%d0%b0%d1%86%d0%b8-%d0%be-%d0%ba%d0%be%d1%80%d0%be%d0%bd%d0%b0%d0%b2%d0%b8%d1%80%d1%83%d1%81%d1%83/")
+scrapingdead<-my_html%>%html_nodes("p")%>%html_text
+
+
+```
+
+Row {data-height=185} 
+----------------------------------------------------------------
+
+### **Ukupan broj zaraženih**
+```{r}
+#creation of value box in upper left corner
+
+valueBox(format(sum(covidserbiamap$`sum(Vrednost)`),big.mark = ","),color = "#B22222")
+
+
+```
+
+
+### **Ukupan broj izlečenih**
+```{r}
+
+valueBox(format(42,big.mark = ","),color = "green")
+```
+
+### **Ukupan broj preminulih**
+```{r}
+
+valueBox(format(scrapingdead[29], big.mark = ","),color = "black")
+```
+
+
+Row {data-height=815} 
+-----------------------------------------------------------------------
+### **Mapa sa ukupnim brojem zaraženih po gradovima**
+
+```{r}
+m<-leaflet(covidserbiamap) %>% 
+  addTiles(attribution = paste(
+    "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Data from: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">Open data portal Serbia</a>"))%>%
+  setView(lng = 21.0059, lat = 44.0165, zoom = 7)%>%
+  addAwesomeMarkers( icon = icon2, popup = ~paste(
+    "Grad:", `NazivTeritorije`, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
+
+m
+```
+
+
+### **Broj novih slucajeva po gradovima**
+
+```{r}
+
+tx <- highlight_key(covidserbialinechart)
+gg <- ggplot(tx) + 
+  geom_line(aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info, color=NazivTeritorije))+
+  ylab("Broj novih slucajeva")+
+  xlab("")+
+  theme(legend.position = "none", 
+          panel.background = element_rect (fill = "lightcyan"))
+filter <- bscols(
+  filter_select("id", "Izaberi grad", tx, ~NazivTeritorije),
+  ggplotly(gg, dynamicTicks = TRUE,tooltip = "label"),
+  widths = c(12, 12)
+)
+filter$x$layout$margin$b <- filter$x$layout$margin$b + 60
+
+filter
+
+```
+
+
