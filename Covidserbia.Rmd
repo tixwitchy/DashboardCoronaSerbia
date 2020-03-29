@@ -1,5 +1,5 @@
 ---
-title: "COVID-19 Srbija- Statistika na dan"
+title: "COVID-19 Srbija - Statistika na dan"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -83,7 +83,7 @@ covidserbialinechart<-covidserbialonglat%>%
 
 covidserbialinechart$NazivTeritorije[covidserbialinechart$NazivTeritorije=="Republika Srbija"]<-"SVI GRADOVI"
 
-covidserbialinechart$Datum<-as.Date(covidserbialinechart$Datum)
+covidserbialinechart$Datum<-format(as.Date(covidserbialinechart$Datum),"%d.%m.")
 
 covidserbialinechart<-covidserbialinechart%>%
   group_by(NazivTeritorije,Datum)%>%
@@ -122,8 +122,8 @@ valueBox(format(42,big.mark = ","),color = "green")
 
 ### **Ukupan broj preminulih**
 ```{r}
-
-valueBox(format(scrapingdead[29], big.mark = ","),color = "black")
+#scrapingdead[29]
+valueBox(format(10, big.mark = ","),color = "black")
 ```
 
 
@@ -148,13 +148,15 @@ m
 ```{r}
 
 tx <- highlight_key(covidserbialinechart)
-gg <- ggplot(tx) + 
-  geom_line(aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info, color=NazivTeritorije))+
+gg <- ggplot(tx,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info, color=NazivTeritorije)) +
+  geom_point()+
+  geom_line()+
   ylab("Broj novih slucajeva")+
   xlab("")+
   theme(legend.position = "none", 
-          panel.background = element_rect (fill = "lightcyan")
-        )
+        panel.background = element_rect (fill = "lightcyan"),
+        axis.text.x = element_text(angle=45)
+  )
 
 filter <- bscols(
   filter_select("id", "Izaberi grad", tx, ~NazivTeritorije),
