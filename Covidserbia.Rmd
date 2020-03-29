@@ -1,5 +1,5 @@
 ---
-title: "COVID-19 Srbija statistika na dan"
+title: "COVID-19 Srbija- Statistika na dan"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -143,7 +143,7 @@ m
 ```
 
 
-### **Broj novih slucajeva po gradovima**
+### **Broj novih slucajeva - gradovi po danima**
 
 ```{r}
 
@@ -153,7 +153,9 @@ gg <- ggplot(tx) +
   ylab("Broj novih slucajeva")+
   xlab("")+
   theme(legend.position = "none", 
-          panel.background = element_rect (fill = "lightcyan"))
+          panel.background = element_rect (fill = "lightcyan")
+        )
+
 filter <- bscols(
   filter_select("id", "Izaberi grad", tx, ~NazivTeritorije),
   ggplotly(gg, dynamicTicks = TRUE,tooltip = "label"),
