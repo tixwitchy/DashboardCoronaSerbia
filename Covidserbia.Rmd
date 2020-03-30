@@ -161,8 +161,8 @@ gg <- ggplot(tx,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info
   scale_x_date(date_breaks = "1 week",date_labels = "%d.%m.")+
   #geom_jitter(height = 0.05)+
  #scale_color_viridis(discrete = TRUE) +
-   xlab("Broj novih slučajeva")+
-  ylab("")+
+   ylab("Broj novih slučajeva")+
+  xlab("")+
   theme(legend.position = "none", 
         panel.background = element_rect (fill = "lightcyan"),
         plot.margin = margin(0, 0, 2.2, 0, "cm"),
