@@ -21,7 +21,8 @@ library(rvest)
 
 
 
-url1<-"https://data.gov.rs/sr/datasets/r/1977833a-36f2-445e-916a-ef51b217d3a0"
+
+url1<-"https://data.gov.rs/s/resources/covid-19-zarazheni/20200329-210346/covid-19.xlsx"
 GET(url1, write_disk(tf <- tempfile(fileext = ".xlsx")))
 covidserbia <- read_excel(tf)
 str(covidserbia)
@@ -117,13 +118,13 @@ valueBox(format(sum(covidserbiamap$`sum(Vrednost)`),big.mark = ","),color = "#B2
 ### **Ukupan broj izlečenih**
 ```{r}
 
-valueBox(format(42,big.mark = ","),color = "green")
+valueBox(54,color = "green")
 ```
 
 ### **Ukupan broj preminulih**
 ```{r}
-#scrapingdead[29]
-valueBox(format(10, big.mark = ","),color = "black")
+
+valueBox(format(scrapingdead[28], big.mark = ","),color = "black")
 ```
 
 
@@ -151,6 +152,8 @@ tx <- highlight_key(covidserbialinechart)
 gg <- ggplot(tx,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info, color=NazivTeritorije)) +
   geom_point()+
   geom_line()+
+  #geom_jitter(height = 0.05)+
+ #scale_color_viridis(discrete = TRUE) +
   ylab("Broj novih slucajeva")+
   xlab("")+
   theme(legend.position = "none", 
