@@ -106,8 +106,6 @@ scrapingdead<-my_html%>%html_nodes("p")%>%html_text
 ```
 
 
-SRB
-=================================================================
 Row {data-height=185} 
 ----------------------------------------------------------------
 
@@ -167,85 +165,12 @@ gg <- ggplot(tx,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info
   )
 
 filter <- bscols(
-  filter_select("nesto", "Izaberi grad", tx, ~NazivTeritorije),
-  ggplotly(gg, dynamicTicks = TRUE,tooltip = "label",height = 450,width = 695),
+  filter_select("id", "Izaberi grad", tx, ~NazivTeritorije),
+  ggplotly(gg, dynamicTicks = TRUE,tooltip = "label",height=400),
   widths = c(12, 12)
 )
-filter$x$layout$margin$b <- filter$x$layout$margin$b + 60
+
 
 filter
-```
-
-
-ENG
-=================================================================
-
-Row {data-height=185} 
-----------------------------------------------------------------
-
-### **Total Number of Infected**
-```{r}
-#creation of value box in upper left corner
-
-valueBox(format(sum(covidserbiamap$`sum(Vrednost)`),big.mark = ","),color = "#B22222")
-
-
-```
-
-
-### **Total Number of Recovered**
-```{r}
-
-valueBox(54,color = "green")
-```
-
-### **Total Number of Deceased**
-```{r}
-
-valueBox(format(scrapingdead[28], big.mark = ","),color = "black")
-```
-
-
-Row {data-height=815} 
------------------------------------------------------------------------
-### **Map with Total Number of Infected by Towns** 
-
-```{r}
-m<-leaflet(covidserbiamap) %>% 
-  addTiles(attribution = paste(
-    "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Data from: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">Open data portal Serbia</a>"))%>%
-  setView(lng = 21.0059, lat = 44.0165, zoom = 7)%>%
-  addAwesomeMarkers( icon = icon2, popup = ~paste(
-    "Town:", `NazivTeritorije`, "<br>","Number of Cases:",`sum(Vrednost)`, "<br>"))
-
-m
-```
-
-### **Number of New Cases - Towns by Day**
-
-```{r}
-
-tx1 <- highlight_key(covidserbialinecharteng)
-gg1 <- ggplot(tx1,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info, color=NazivTeritorije)) +
-  geom_point()+
-  geom_line()+
-  #geom_jitter(height = 0.05)+
- #scale_color_viridis(discrete = TRUE) +
-  ylab("Number of New Cases")+
-  xlab("")+
-  theme(legend.position = "none", 
-        panel.background = element_rect (fill = "lightcyan"),
-        axis.text.x = element_text(angle=45)
-  )
-
-filter1 <- bscols(
-  filter_select("id1", "Choose Town", tx1, ~NazivTeritorije),
-  ggplotly(gg1, dynamicTicks = TRUE,tooltip = "label",height = 450,width = 695),
-  widths = c(12, 12)
-)
-
-filter1$x$layout$margin$b <- filter1$x$layout$margin$b + 60
-filter1
-
 ```
 
