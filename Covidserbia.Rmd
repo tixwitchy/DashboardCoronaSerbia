@@ -1,10 +1,11 @@
 ---
-title: "COVID-19 Srbija - Statistika na dan"
+title: "COVID-19 Srbija - Statistika "
+author: "Podaci preuzeti sa sajta data.gov.rs i covid19.rs za dan"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: fill
-date: '`r format(Sys.Date()-1, "%d. %m. %Y.")`'
+date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
 
 ---
 
@@ -141,7 +142,7 @@ Row {data-height=815}
 ```{r}
 m<-leaflet(covidserbiamap) %>% 
   addTiles(attribution = paste(
-    "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Data from: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">Open data portal Serbia</a>"))%>%
+    "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Podaci preuzeti sa: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">data.gov.rs</a>"))%>%
   setView(lng = 21.0059, lat = 44.0165, zoom = 7)%>%
   addAwesomeMarkers( icon = icon2, popup = ~paste(
     "Grad:", `NazivTeritorije`, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
@@ -160,12 +161,14 @@ gg <- ggplot(tx,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info
   scale_x_date(date_breaks = "1 week",date_labels = "%d.%m.")+
   #geom_jitter(height = 0.05)+
  #scale_color_viridis(discrete = TRUE) +
-  ylab("Broj novih slučajeva")+
-  xlab("")+
+   xlab("Broj novih slučajeva")+
+  ylab("")+
   theme(legend.position = "none", 
         panel.background = element_rect (fill = "lightcyan"),
-        plot.margin = margin(0, 0, 2.2, 0, "cm")
+        plot.margin = margin(0, 0, 2.2, 0, "cm"),
+        plot.caption = element_text()
   )
+
 
 filter <- bscols(
   filter_select("id", "Izaberi grad", tx, ~NazivTeritorije),
