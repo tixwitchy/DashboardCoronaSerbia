@@ -161,16 +161,17 @@ gg <- ggplot(tx,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info
   xlab("")+
   theme(legend.position = "none", 
         panel.background = element_rect (fill = "lightcyan"),
-        axis.text.x = element_text(angle=45)
+        axis.text.x = element_text(angle=45),
+        plot.margin = margin(0, 0, 2, 0, "cm")
   )
 
 filter <- bscols(
   filter_select("id", "Izaberi grad", tx, ~NazivTeritorije),
-  ggplotly(gg, dynamicTicks = TRUE,tooltip = "label",height=300),
+  ggplotly(gg, dynamicTicks = TRUE, tooltip = "label"),
   widths = c(12, 12)
 )
 
-
 filter
+
 ```
 
