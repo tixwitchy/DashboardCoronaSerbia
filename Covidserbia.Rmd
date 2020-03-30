@@ -22,6 +22,7 @@ library(rvest)
 
 
 
+
 url1<-"https://data.gov.rs/s/resources/covid-19-zarazheni/20200329-210346/covid-19.xlsx"
 GET(url1, write_disk(tf <- tempfile(fileext = ".xlsx")))
 covidserbia <- read_excel(tf)
@@ -84,7 +85,8 @@ covidserbialinechart<-covidserbialonglat%>%
 
 covidserbialinechart$NazivTeritorije[covidserbialinechart$NazivTeritorije=="Republika Srbija"]<-"SVI GRADOVI"
 
-covidserbialinechart$Datum<-format(as.Date(covidserbialinechart$Datum),"%d.%m.")
+
+covidserbialinechart$Datum<-as.Date(covidserbialinechart$Datum)
 
 covidserbialinechart<-covidserbialinechart%>%
   group_by(NazivTeritorije,Datum)%>%
@@ -92,16 +94,16 @@ covidserbialinechart<-covidserbialinechart%>%
   ungroup()
 
 covidserbialinechart<-covidserbialinechart%>%
-  mutate(Info=paste("<br>","Grad:",NazivTeritorije, "<br>","Datum:",Datum, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
+  mutate(Info=paste("<br>","Grad:",NazivTeritorije, "<br>","Datum:",format(Datum,"%d.%m."), "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
 
-covidserbialinecharteng<-covidserbialinechart%>%
-  mutate(Info=paste("<br>","Town:",NazivTeritorije, "<br>","Date:",Datum, "<br>","Number of Cases:",`sum(Vrednost)`, "<br>"))
+
 
 #scraping number of dead
 
-#my_html<-read_html("https://covid19.rs/%d1%81%d1%82%d0%b0%d1%82%d0%b8%d1%81%d1%82%d0%b8%d1%87%d0%ba%d0%b8-%d0%bf%d0%be%d0%b4%d0%b0%d1%86%d0%b8-%d0%be-%d0%ba%d0%be%d1%80%d0%be%d0%bd%d0%b0%d0%b2%d0%b8%d1%80%d1%83%d1%81%d1%83/")
-#scrapingdead<-my_html%>%html_nodes("p")%>%html_text
+my_html<-read_html("https://covid19.rs/%d1%81%d1%82%d0%b0%d1%82%d0%b8%d1%81%d1%82%d0%b8%d1%87%d0%ba%d0%b8-%d0%bf%d0%be%d0%b4%d0%b0%d1%86%d0%b8-%d0%be-%d0%ba%d0%be%d1%80%d0%be%d0%bd%d0%b0%d0%b2%d0%b8%d1%80%d1%83%d1%81%d1%83/")
+scrapingdead<-my_html%>%html_nodes("p")%>%html_text
 
+scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ")+3]
 
 ```
 
@@ -127,8 +129,8 @@ valueBox(54,color = "green")
 
 ### **Ukupan broj preminulih**
 ```{r}
-
-valueBox(format(13, big.mark = ","),color = "black")
+#scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ")+3]
+valueBox(format(10, big.mark = ","),color = "black")
 ```
 
 
@@ -154,20 +156,20 @@ m
 tx <- highlight_key(covidserbialinechart)
 gg <- ggplot(tx,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info, color=NazivTeritorije)) +
   geom_point()+
-  geom_line()+
+  geom_line()+ 
+  scale_x_date(date_breaks = "1 week",date_labels = "%d.%m.")+
   #geom_jitter(height = 0.05)+
  #scale_color_viridis(discrete = TRUE) +
   ylab("Broj novih slučajeva")+
   xlab("")+
   theme(legend.position = "none", 
         panel.background = element_rect (fill = "lightcyan"),
-        axis.text.x = element_text(angle=45),
-        plot.margin = margin(0, 0, 2, 0, "cm")
+        plot.margin = margin(0, 0, 2.2, 0, "cm")
   )
 
 filter <- bscols(
   filter_select("id", "Izaberi grad", tx, ~NazivTeritorije),
-  ggplotly(gg, dynamicTicks = TRUE, tooltip = "label"),
+  ggplotly(gg,tooltip = "label"),
   widths = c(12, 12)
 )
 
