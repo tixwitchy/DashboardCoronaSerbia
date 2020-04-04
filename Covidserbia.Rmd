@@ -5,7 +5,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: fill
-date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
+date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
 
 ---
 
@@ -116,7 +116,7 @@ Row {data-height=185}
 ```{r}
 #creation of value box in upper left corner
 
-valueBox(format(sum(covidserbiamap$`sum(Vrednost)`),big.mark = ","),color = "#B22222")
+valueBox(format(scrapingdead[which(scrapingdead=="УКУПАН БРОЈ ОБОЛЕЛИХ")+1],big.mark = ","),color = "#B22222")
 
 
 ```
@@ -130,14 +130,14 @@ valueBox(54,color = "green")
 
 ### **Ukupan broj preminulih**
 ```{r}
-#scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ")+3]
-valueBox(format(10, big.mark = ","),color = "black")
+
+valueBox(format(scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ")+3], big.mark = ","),color = "black")
 ```
 
 
 Row {data-height=815} 
 -----------------------------------------------------------------------
-### **Mapa sa ukupnim brojem zaraženih po gradovima**
+### **Mapa sa ukupnim brojem zaraženih po gradovima do 29.03.**
 
 ```{r}
 m<-leaflet(covidserbiamap) %>% 
@@ -151,7 +151,7 @@ m
 ```
 
 
-### **Broj novih slučajeva - gradovi po danima**
+### **Broj novih slučajeva - gradovi po danima do 29.03.**
 
 ```{r}
 tx <- highlight_key(covidserbialinechart)
