@@ -77,7 +77,7 @@ covidserbiamap<-covidserbialonglat%>%
 covidserbiamap<-left_join(covidserbiamap,municipalitiescsv1,by="NazivTeritorije")
 
 
-icon2<-awesomeIcons(icon="genderless",library="fa",markerColor = "red")
+#icon2<-awesomeIcons(icon="genderless",library="fa",markerColor = "red")
 
 covidserbialinechart<-covidserbialonglat%>%
   filter(covidserbialonglat$Tip=="ZAR_DAN"& covidserbialonglat$Vrednost>0)%>%
@@ -144,8 +144,12 @@ m<-leaflet(covidserbiamap) %>%
   addTiles(attribution = paste(
     "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Podaci preuzeti sa: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">data.gov.rs</a>","Kontakt za dashboard:<a href=\"mailto:etijana@gmail.com\">Tijana Blagojev </a"))%>%
   setView(lng = 21.0059, lat = 44.0165, zoom = 7)%>%
-  addAwesomeMarkers( icon = icon2, popup = ~paste(
-    "Grad:", `NazivTeritorije`, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
+  addCircles(radius = ~`sum(Vrednost)`^(.5)*1000,weight = 1, color = "black",
+             fillColor = "red", fillOpacity = 0.6,  
+             popup = ~paste("Grad:", `NazivTeritorije`, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
+  
+  #addAwesomeMarkers( icon = icon2, popup = ~paste(
+   # "Grad:", `NazivTeritorije`, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
 
 m
 ```
