@@ -125,7 +125,7 @@ valueBox(format(scrapingdead[which(scrapingdead=="УКУПАН БРОЈ ОБОЛ
 ### **Ukupan broj izlečenih**
 ```{r}
 
-valueBox(54,color = "green")
+valueBox(118,color = "green")
 ```
 
 ### **Ukupan broj preminulih**
