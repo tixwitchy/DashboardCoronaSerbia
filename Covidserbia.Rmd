@@ -38,9 +38,9 @@ covidserbianew<-covidserbianew%>%
   rename(`Mesto(MUP)`=`Место (МУП)`)
 
   covidserbianew<-covidserbianew%>% 
-  mutate(Datum=Sys.Date()-1)
+  mutate(Datum=Sys.Date()-1)%>%
+    drop_na(NazivTeritorije)
 
-covidserbianew<-drop_na(covidserbianew)
 
 
 
