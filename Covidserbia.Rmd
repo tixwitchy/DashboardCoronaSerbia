@@ -128,17 +128,17 @@ zarazenitestirani<-read.csv("zarazenitestirani.csv")
 zarazenitestirani$Datum<-as.Date( zarazenitestirani$Datum)
 
 sum(zarazenitestirani$BrojZarazenih)
-zarazenitestirani$Datum<-as.Date( zarazenitestirani$Datum)
-#if you are testing the code just bear in mind that the next few  lines code will create new row 
+
+#if you are testing the code just bear in mind that the next few  lines code will create new row #so use it on the day of update only
 #with the same data if this is run on same day
 # so remember to remove the duplicated lines before writing csv file
-zarazenitestirani<-zarazenitestirani%>%
-  add_row(BrojTestiranih= scrapingcovid19[which(scrapingcovid19=="БРОЈ ТЕСТИРАНИХ У ПОСЛЕДЊА 24 ЧАСА")+1],
-          BrojZarazenih=scrapingcovid19[which(scrapingcovid19=="БРОЈ ПОТВРЂЕНИХ СЛУЧАЈЕВА У \nПОСЛЕДЊИХ 24 ЧАСА")+1],
-          Datum=Sys.Date())
-zarazenitestirani$BrojTestiranih[zarazenitestirani$BrojTestiranih=="2.880"]<-2880
+#zarazenitestirani<-zarazenitestirani%>%
+  #add_row(BrojTestiranih= scrapingcovid19[which(scrapingcovid19=="БРОЈ ТЕСТИРАНИХ У ПОСЛЕДЊА 24 ЧАСА")+1],
+         # BrojZarazenih=scrapingcovid19[which(scrapingcovid19=="БРОЈ ПОТВРЂЕНИХ СЛУЧАЈЕВА У \nПОСЛЕДЊИХ 24 ЧАСА")+1],
+         # Datum=Sys.Date())
+#zarazenitestirani$BrojTestiranih[zarazenitestirani$BrojTestiranih=="2.880"]<-2880
 
-
+#write_csv(zarazenitestirani,"zarazenitestirani.csv")
 
 ```
 
