@@ -21,81 +21,94 @@ library(crosstalk)
 library(rvest)
 
 
+#nova updateoana lista 14. april
+
+url2<-"https://data.gov.rs/s/resources/covid-19-zarazheni/20200414-163734/covid-19.xls"
+GET(url2, write_disk(tf <- tempfile(fileext = ".xls")))
+covidserbianew <- read_excel(tf)
+str(covidserbianew)
+
+covidserbianew$Пол <- stringi::stri_trans_general(covidserbianew$Пол, "Serbian-Latin/BGN")
+covidserbianew$`Општина (МУП)` <- stringi::stri_trans_general(covidserbianew$`Општина (МУП)`, "Serbian-Latin/BGN")
+covidserbianew$`Место (МУП)` <- stringi::stri_trans_general(covidserbianew$`Место (МУП)`, "Serbian-Latin/BGN")
+
+covidserbianew<-covidserbianew%>%
+  rename(Pol = Пол)%>%
+  rename(NazivTeritorije =`Општина (МУП)`)%>%
+  rename(`Mesto(MUP)`=`Место (МУП)`)
+
+  covidserbianew<-covidserbianew%>% 
+  mutate(Datum=Sys.Date()-1)
+
+covidserbianew<-drop_na(covidserbianew)
 
 
 
-url1<-"https://data.gov.rs/s/resources/covid-19-zarazheni/20200329-210346/covid-19.xlsx"
-GET(url1, write_disk(tf <- tempfile(fileext = ".xlsx")))
-covidserbia <- read_excel(tf)
-str(covidserbia)
+
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="SAVSKI VENAC"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="VOŽDOVAC"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="GROCKA"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="VRAČAR"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="PALILULA"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="NOVI BEOGRAD"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="ČUKARICA"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="ZVEZDARA"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="STARI GRAD"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="RAKOVICA"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="ZEMUN"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="SURČIN"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="SOPOT"]="BEOGRAD"
+covidserbianew$NazivTeritorije[covidserbianew$NazivTeritorije=="BARAJEVO"]="BEOGRAD"
+
+covidserbia14.apr<-covidserbianew%>%
+  group_by(`NazivTeritorije`)%>%
+  count(NazivTeritorije)
+
+
+
+
 
 #importing longitude and latitude
-municipalitiescsv<-read_csv("Longitude and latitude for cities.csv",col_names = TRUE)
-
-municipalitiescsv1<-municipalitiescsv%>%
-  rename(NazivTeritorije=city)%>%
-  select(-X1)
-
-#changing several towns
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="ČAČAK-GRAD"]="ČAČAK"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="JAGODINA-GRAD"]="JAGODINA"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="KIKINDA-GRAD"]="KIKINDA"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="KRAGUJEVAC-GRAD"]="KRAGUJEVAC"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="KRUŠEVAC-GRAD"]="KRUŠEVAC"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="LESKOVAC-GRAD"]="LESKOVAC"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="LOZNICA-GRAD"]="LOZNICA"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="NOVI PAZAR-GRAD"]="NOVI PAZAR"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="PANČEVO-GRAD"]="PANČEVO"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="PRIŠTINA-GRAD"]="PRIŠTINA"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="PIROT-GRAD"]="PIROT"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="ŠABAC-GRAD"]="ŠABAC"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="SMEDEREVO-GRAD"]="SMEDEREVO"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="SOMBOR-GRAD"]="SOMBOR"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="SREMSKA MITROVICA-GRAD"]="SREMSKA MITROVICA"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="SUBOTICA-GRAD"]="SUBOTICA"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="VALJEVO-GRAD"]="VALJEVO"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="VRŠAC-GRAD"]="VRŠAC"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="ZAJEČAR-GRAD"]="ZAJEČAR"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="ZRENJANIN-GRAD"]="ZRENJANIN"
-covidserbia$NazivTeritorije[covidserbia$NazivTeritorije=="KRALJEVO-GRAD"]="KRALJEVO"
+municipalitiescsv<-read_csv("longlatcitiesserb.csv",col_names = TRUE)
 
 
 
 
-covidserbialonglat<-left_join(covidserbia,municipalitiescsv1,by="NazivTeritorije")
-
-apply(covidserbialonglat, 2, function(x) any(is.na(x)))
-#checking if here are any duplicates check
-duplicated(covidserbialonglat)
-
-covidserbiamap<-covidserbialonglat%>%
-  filter(covidserbialonglat$Tip=="ZAR_DAN"& covidserbialonglat$NazivTeritorije!="Republika Srbija",covidserbialonglat$Vrednost>0)%>%
-  select(-c(Sifra,IDTeritorije))%>%
-  group_by(NazivTeritorije)%>%
-  summarise(sum(Vrednost))
- 
-covidserbiamap<-left_join(covidserbiamap,municipalitiescsv1,by="NazivTeritorije")
 
 
-#icon2<-awesomeIcons(icon="genderless",library="fa",markerColor = "red")
 
-covidserbialinechart<-covidserbialonglat%>%
-  filter(covidserbialonglat$Tip=="ZAR_DAN"& covidserbialonglat$Vrednost>0)%>%
-  select(-c(Sifra,IDTeritorije))%>%
-  mutate(Datum=paste(Godina,Mesec,Dan,sep = "/"))
+covidserbialonglat1<-left_join(covidserbia14.apr,municipalitiescsv,by="NazivTeritorije")
+duplicated(covidserbialonglat1)
+covidserbialonglat1<- covidserbialonglat1[!duplicated(covidserbialonglat1), ]
 
-covidserbialinechart$NazivTeritorije[covidserbialinechart$NazivTeritorije=="Republika Srbija"]<-"SVI GRADOVI"
+#cicevac
+covidserbialonglat1[24,3]<-21.4437
+covidserbialonglat1[24,4]<-43.7213
+#curoija
 
+covidserbialonglat1[26,3]<-21.3748
+covidserbialonglat1[26,4]<-43.9255
+#leposavic
+covidserbialonglat1[61,3]<-20.8011
+covidserbialonglat1[61,4]<-43.1016
 
-covidserbialinechart$Datum<-as.Date(covidserbialinechart$Datum)
+#niska banja
+covidserbialonglat1[72,3]<-22.0044
+covidserbialonglat1[72,4]<-43.2982
+#obilic
+covidserbialonglat1[79,3]<-21.0670
+covidserbialonglat1[79,4]<-42.6869
+#Paracin
+covidserbialonglat1[84,3]<-21.4039
+covidserbialonglat1[84,4]<-43.8586
+#pec
+covidserbialonglat1[85,3]<-20.2887
+covidserbialonglat1[85,4]<-42.6593
 
-covidserbialinechart<-covidserbialinechart%>%
-  group_by(NazivTeritorije,Datum)%>%
-  summarise(sum(Vrednost))%>%
-  ungroup()
+#pecinci
+covidserbialonglat1[86,3]<-19.9697
+covidserbialonglat1[86,4]<-44.9047
 
-covidserbialinechart<-covidserbialinechart%>%
-  mutate(Info=paste("<br>","Grad:",NazivTeritorije, "<br>","Datum:",format(Datum,"%d.%m."), "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
 
 
 
@@ -105,6 +118,27 @@ my_html<-read_html("https://covid19.rs/%d1%81%d1%82%d0%b0%d1%82%d0%b8%d1%81%d1%8
 scrapingdead<-my_html%>%html_nodes("p")%>%html_text
 
 scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ")+3]
+
+
+
+
+#zarazeni testirani
+
+zarazenitestirani<-read.csv("zarazenitestirani.csv")
+zarazenitestirani$Datum<-as.Date( zarazenitestirani$Datum)
+
+sum(zarazenitestirani$BrojZarazenih)
+zarazenitestirani$Datum<-as.Date( zarazenitestirani$Datum)
+#if you are testing the code just bear in mind that the next few  lines code will create new row 
+#with the same data if this is run on same day
+# so remember to remove the duplicated lines before writing csv file
+zarazenitestirani<-zarazenitestirani%>%
+  add_row(BrojTestiranih= scrapingcovid19[which(scrapingcovid19=="БРОЈ ТЕСТИРАНИХ У ПОСЛЕДЊА 24 ЧАСА")+1],
+          BrojZarazenih=scrapingcovid19[which(scrapingcovid19=="БРОЈ ПОТВРЂЕНИХ СЛУЧАЈЕВА У \nПОСЛЕДЊИХ 24 ЧАСА")+1],
+          Datum=Sys.Date())
+zarazenitestirani$BrojTestiranih[zarazenitestirani$BrojTestiranih=="2.880"]<-2880
+
+
 
 ```
 
@@ -137,50 +171,49 @@ valueBox(format(scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ"
 
 Row {data-height=815} 
 -----------------------------------------------------------------------
-### **Mapa sa ukupnim brojem zaraženih po gradovima do 29.03.**
+### **Mapa sa ukupnim brojem zaraženih po opštinama na dan 14.04.**
 
 ```{r}
-m<-leaflet(covidserbiamap) %>% 
+
+
+m<-leaflet(covidserbialonglat1) %>% 
   addTiles(attribution = paste(
     "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Podaci preuzeti sa: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">data.gov.rs</a>","Kontakt za dashboard:<a href=\"mailto:etijana@gmail.com\">Tijana Blagojev </a"))%>%
   setView(lng = 21.0059, lat = 44.0165, zoom = 7)%>%
-  addCircles(radius = ~`sum(Vrednost)`^(.5)*1000,weight = 1, color = "black",
+  addCircles(radius = ~`n`^(.5)*500,weight = 1, color = "black",
              fillColor = "red", fillOpacity = 0.6,  
-             popup = ~paste("Grad:", `NazivTeritorije`, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
-  
-  #addAwesomeMarkers( icon = icon2, popup = ~paste(
-   # "Grad:", `NazivTeritorije`, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
+             popup = ~paste("Opština:", `NazivTeritorije`, "<br>","Broj slučajeva:",`n`, "<br>"))
+
+#addAwesomeMarkers( icon = icon2, popup = ~paste(
+# "Grad:", `NazivTeritorije`, "<br>","Broj slučajeva:",`sum(Vrednost)`, "<br>"))
 
 m
 ```
 
 
-### **Broj novih slučajeva - gradovi po danima do 29.03.**
+### **Broj testiranih i broj pozitivnih u Srbiji po danima**
 
 ```{r}
-tx <- highlight_key(covidserbialinechart)
-gg <- ggplot(tx,aes(Datum, `sum(Vrednost)`, group = NazivTeritorije,label = Info, color=NazivTeritorije)) +
-  geom_point()+
-  geom_line()+ 
+gg <- ggplot(zarazenitestirani) +
+  geom_area(aes(Datum, `BrojTestiranih`,fill="Testirani"))+
+  geom_area(aes(Datum,`BrojZarazenih`,fill= "Pozitivni"))+
+ scale_fill_manual(values =  c("#B22222","#4169E1"))+
   scale_x_date(date_breaks = "1 week",date_labels = "%d.%m.")+
-  #geom_jitter(height = 0.05)+
- #scale_color_viridis(discrete = TRUE) +
-   ylab("Broj novih slučajeva")+
+  ylab("")+
   xlab("")+
-  theme(legend.position = "none", 
-        panel.background = element_rect (fill = "lightcyan"),
-        plot.margin = margin(0, 0, 2.2, 0, "cm"),
+
+  theme(
+        legend.title = element_blank(),
+        panel.background = element_blank(),
+       plot.margin = margin(0, 0, 2.2, 0, "cm"),
         plot.caption = element_text()
   )
 
 
-filter <- bscols(
-  filter_select("id", "Izaberi grad", tx, ~NazivTeritorije),
-  ggplotly(gg,tooltip = "label"),
-  widths = c(12, 12)
-)
 
-filter
+  ggplotly( gg) %>%
+  layout(legend = list(
+      orientation = "h"))
 
 ```
 
