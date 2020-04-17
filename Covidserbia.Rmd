@@ -5,7 +5,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: fill
-date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
+date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
 
 ---
 
@@ -24,50 +24,47 @@ library(leaflet)
 library(tmap)
 
 
-#nova updateoana lista 14. april
 
-url2<-"https://data.gov.rs/s/resources/covid-19-zarazheni/20200414-163734/covid-19.xls"
-GET(url2, write_disk(tf <- tempfile(fileext = ".xls")))
-covidserbianew <- read_excel(tf)
-str(covidserbianew)
-
-covidserbianew$Пол <- stringi::stri_trans_general(covidserbianew$Пол, "Serbian-Latin/BGN")
-covidserbianew$`Општина (МУП)` <- stringi::stri_trans_general(covidserbianew$`Општина (МУП)`, "Serbian-Latin/BGN")
-covidserbianew$`Место (МУП)` <- stringi::stri_trans_general(covidserbianew$`Место (МУП)`, "Serbian-Latin/BGN")
-
-covidserbianew<-covidserbianew%>%
-  rename(Pol = Пол)%>%
-  rename(NazivTeritorije =`Општина (МУП)`)%>%
-  rename(`Mesto(MUP)`=`Место (МУП)`)
-
-  covidserbianew<-covidserbianew%>% 
-  mutate(Datum=Sys.Date()-1)%>%
-    drop_na(NazivTeritorije)
+covidserbianew<-read_xlsx("covidserbianew.xlsx")
 
 
+covidserbianew1<-covidserbianew%>%
+  select(-c(Datum,`Mesto(MUP)`))
 
-covidserbianew1<-covidserbianew
+#adding another day
 
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="SAVSKI VENAC"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="VOŽDOVAC"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="GROCKA"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="VRAČAR"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="PALILULA"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="NOVI BEOGRAD"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="ČUKARICA"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="ZVEZDARA"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="STARI GRAD"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="RAKOVICA"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="ZEMUN"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="SURČIN"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="SOPOT"]="BEOGRAD"
-covidserbianew1$NazivTeritorije[covidserbianew1$NazivTeritorije=="BARAJEVO"]="BEOGRAD"
+url3<-"https://data.gov.rs/s/resources/dnevni-izveshtaj-o-zarazhenima-covid-19/20200416-205728/covid19.xlsx"
 
-covidserbia14.apr<-covidserbianew1%>%
+GET(url3, write_disk(tf <- tempfile(fileext = ".xlsx")))
+covidserbia16apr <- read_excel(tf)
+str(covidserbia16apr)
+
+covidserbia16add<-covidserbia16apr%>%
+  select(POL,STAROST, OPŠTINA)%>%
+  rename(NazivTeritorije=OPŠTINA)
+
+covidserbianew1<-rbind(covidserbianew1,covidserbia16add)
+covidserbianew2<-covidserbianew1
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="SAVSKI VENAC"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="VOŽDOVAC"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="GROCKA"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="VRAČAR"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="PALILULA"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="NOVI BEOGRAD"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="ČUKARICA"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="ZVEZDARA"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="STARI GRAD"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="RAKOVICA"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="ZEMUN"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="SURČIN"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="SOPOT"]="BEOGRAD"
+covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="BARAJEVO"]="BEOGRAD"
+
+
+
+covidserbia14.apr<-covidserbianew2%>%
   group_by(`NazivTeritorije`)%>%
   count(NazivTeritorije)
-
-
 
 
 
@@ -78,39 +75,11 @@ municipalitiescsv<-read_csv("longlatcitiesserb.csv",col_names = TRUE)
 
 
 
-
-
 covidserbialonglat1<-left_join(covidserbia14.apr,municipalitiescsv,by="NazivTeritorije")
 duplicated(covidserbialonglat1)
 covidserbialonglat1<- covidserbialonglat1[!duplicated(covidserbialonglat1), ]
 
-#cicevac
-covidserbialonglat1[24,3]<-21.4437
-covidserbialonglat1[24,4]<-43.7213
-#curoija
 
-covidserbialonglat1[26,3]<-21.3748
-covidserbialonglat1[26,4]<-43.9255
-#leposavic
-covidserbialonglat1[61,3]<-20.8011
-covidserbialonglat1[61,4]<-43.1016
-
-#niska banja
-covidserbialonglat1[72,3]<-22.0044
-covidserbialonglat1[72,4]<-43.2982
-#obilic
-covidserbialonglat1[79,3]<-21.0670
-covidserbialonglat1[79,4]<-42.6869
-#Paracin
-covidserbialonglat1[84,3]<-21.4039
-covidserbialonglat1[84,4]<-43.8586
-#pec
-covidserbialonglat1[85,3]<-20.2887
-covidserbialonglat1[85,4]<-42.6593
-
-#pecinci
-covidserbialonglat1[86,3]<-19.9697
-covidserbialonglat1[86,4]<-44.9047
 
 
 
@@ -140,7 +109,7 @@ Belgrade_map<- Serbia_map[13:29,]
 Belgrade_map$NAME_2 <- toupper (Belgrade_map$NAME_2)
 Belgrade_map<- dplyr::rename (Belgrade_map, NazivTeritorije = NAME_2)
 
-covidserbBelgrade<-covidserbianew%>%
+covidserbBelgrade<-covidserbianew1%>%
   group_by(NazivTeritorije)%>%
   count(NazivTeritorije)
 Belgrademap_joined <- left_join (Belgrade_map, covidserbBelgrade, key.shp = "NazivTeritorije", key.data = "NazivTeritorije")
@@ -183,7 +152,7 @@ valueBox(format(scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ"
 
 Row {data-height=815} 
 -----------------------------------------------------------------------
-### **Mapa sa ukupnim brojem zaraženih po opštinama na dan 14.04.**
+### **Mapa sa ukupnim brojem zaraženih po opštinama na dan 16.04.**
 
 ```{r}
 
@@ -237,7 +206,7 @@ Beograd i informacije o podacima
 
 Row {data-height=1000} 
 -----------------------------------------------------------------------
-### **Broj slučajeva po opštinama u Beogradu na dan 14.03.** 
+### **Broj slučajeva po opštinama u Beogradu na dan 16.04.** 
 
 ```{r}
 
@@ -245,8 +214,7 @@ Row {data-height=1000}
 map <- tm_shape(Belgrademap_joined)+
   tmap_style("cobalt") +
 
-        tm_polygons(col = "Broj_zaraženih",title = "Broj zaraženih",id = "NazivTeritorije",palette = "YlOrRd",popup.vars = c(
-							   "Broj zaraženih:"= "Broj_zaraženih"),	popup.format = list()
+        tm_polygons(col = "Broj_zaraženih",title = "Broj zaraženih",palette = "YlOrRd",popup.vars = c("Broj zaraženih:"= "Broj_zaraženih"),id="NazivTeritorije",	popup.format = list()
 			)+
         #tm_layout(title = "Government Financing of Media per Region from 2015-2017")+
         tm_view(text.size.variable = TRUE, view.legend.position = c("right","top"))
@@ -264,7 +232,7 @@ map <- tm_shape(Belgrademap_joined)+
 
 Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih, kao i o broju testiranih i pozitivnih za svaki dan od pojave prvog slučaja u Srbiji. Ovi podaci se ažuriraju odmah nakon konferencija za štampu kriznog štaba. Podaci o izlečenim se ažuriraju na osnovu izjava zdravstvenih stručnjaka sa ovih konferencija jer ih nema na drugim mestima. 
 
-Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka i koji se ne ažuriraju. Ti podaci se koriste za mape za Beograd i za Srbiju. 
+Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje podataka se desilo 16. aprila. Ti podaci se koriste za mape za Beograd i za Srbiju. 
 
 Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam daju bar male naznake pojedinih trendova koji mogu da se prate. 
 
