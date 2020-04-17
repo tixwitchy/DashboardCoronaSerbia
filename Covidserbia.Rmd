@@ -5,7 +5,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: fill
-date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
+date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
 
 ---
 
@@ -140,7 +140,7 @@ valueBox(format(scrapingdead[which(scrapingdead=="УКУПАН БРОЈ ОБОЛ
 ### **Ukupan broj izlečenih**
 ```{r}
 
-valueBox(443,color = "green")#,href="http://rs.n1info.com/Vesti/a582261/Koronavirus-u-Srbiji-Interaktivni-grafikoni-sa-brojem-zarazenih-po-gradovima.html")
+valueBox(534,color = "green")#,href="http://rs.n1info.com/Vesti/a582261/Koronavirus-u-Srbiji-Interaktivni-grafikoni-sa-brojem-zarazenih-po-gradovima.html")
 ```
 
 ### **Ukupan broj preminulih**
