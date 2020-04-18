@@ -26,14 +26,18 @@ library(tmap)
 
 
 covidserbianew<-read_xlsx("covidserbianew.xlsx")
+covidserbianew<-covidserbianew%>%
+  mutate(Datum="2020-04-15")
 
-
+covidserbianew$Datum<-as.Date(covidserbianew$Datum)
 covidserbianew1<-covidserbianew%>%
   select(-c(Datum,`Mesto(MUP)`))
 
+
+
 #adding another day
 
-url3<-"https://data.gov.rs/s/resources/dnevni-izveshtaj-o-zarazhenima-covid-19/20200416-205728/covid19.xlsx"
+url3<-"https://data.gov.rs/sr/datasets/r/fca5fda0-46af-41e2-8005-ef45c4c75e03" 
 
 GET(url3, write_disk(tf <- tempfile(fileext = ".xlsx")))
 covidserbia16apr <- read_excel(tf)
@@ -140,7 +144,7 @@ valueBox(format(scrapingdead[which(scrapingdead=="УКУПАН БРОЈ ОБОЛ
 ### **Ukupan broj izlečenih**
 ```{r}
 
-valueBox(534,color = "green")#,href="http://rs.n1info.com/Vesti/a582261/Koronavirus-u-Srbiji-Interaktivni-grafikoni-sa-brojem-zarazenih-po-gradovima.html")
+valueBox(637,color = "green")#,href="http://rs.n1info.com/Vesti/a582261/Koronavirus-u-Srbiji-Interaktivni-grafikoni-sa-brojem-zarazenih-po-gradovima.html")
 ```
 
 ### **Ukupan broj preminulih**
@@ -152,7 +156,7 @@ valueBox(format(scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ"
 
 Row {data-height=815} 
 -----------------------------------------------------------------------
-### **Mapa sa ukupnim brojem zaraženih po opštinama na dan 16.04.**
+### **Mapa sa ukupnim brojem zaraženih po opštinama na dan `r format(Sys.Date()-1,"%d.%m.")`**
 
 ```{r}
 
@@ -206,7 +210,7 @@ Beograd i informacije o podacima
 
 Row {data-height=1000} 
 -----------------------------------------------------------------------
-### **Broj slučajeva po opštinama u Beogradu na dan 16.04.** 
+### **Broj slučajeva po opštinama u Beogradu na dan `r format(Sys.Date()-1,"%d.%m.")`** 
 
 ```{r}
 
@@ -232,7 +236,7 @@ map <- tm_shape(Belgrademap_joined)+
 
 Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih, kao i o broju testiranih i pozitivnih za svaki dan od pojave prvog slučaja u Srbiji. Ovi podaci se ažuriraju odmah nakon konferencija za štampu kriznog štaba. Podaci o izlečenim se ažuriraju na osnovu izjava zdravstvenih stručnjaka sa ovih konferencija jer ih nema na drugim mestima. 
 
-Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje je bilo 16. aprila. Ti podaci se koriste za mape za Beograd i za Srbiju. 
+Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje je bilo `r format(Sys.Date()-1,"%d.%m.")`. Ti podaci se koriste za mape za Beograd i za Srbiju. 
 
 Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam daju bar male naznake pojedinih trendova koji mogu da se prate. 
 
