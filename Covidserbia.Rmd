@@ -144,7 +144,7 @@ valueBox(format(scrapingdead[which(scrapingdead=="УКУПАН БРОЈ ОБОЛ
 ### **Ukupan broj izlečenih**
 ```{r}
 
-valueBox(637,color = "green")#,href="http://rs.n1info.com/Vesti/a582261/Koronavirus-u-Srbiji-Interaktivni-grafikoni-sa-brojem-zarazenih-po-gradovima.html")
+valueBox(753,color = "green")#,href="http://rs.n1info.com/Vesti/a582261/Koronavirus-u-Srbiji-Interaktivni-grafikoni-sa-brojem-zarazenih-po-gradovima.html")
 ```
 
 ### **Ukupan broj preminulih**
