@@ -305,7 +305,7 @@ map <- tm_shape(Belgrademap_joined)+
 
 ### **Informacije o podacima** {align=justify}
 
-Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih, kao i o broju testiranih i pozitivnih za svaki dan od pojave prvog slučaja u Srbiji. Ovi podaci se ažuriraju odmah nakon konferencija za štampu kriznog štaba. Podaci o izlečenim se ažuriraju na osnovu izjava zdravstvenih stručnjaka sa ovih konferencija jer ih nema na drugim mestima. 
+Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih, izlečenih kao i o broju testiranih i pozitivnih za svaki dan od pojave prvog slučaja u Srbiji. Ovi podaci se ažuriraju odmah nakon konferencija za štampu kriznog štaba. 
 
 Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje je bilo `r format(Sys.Date()-1,"%d.%m.")` Ti podaci se koriste za mape za Beograd i za Srbiju. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
 
