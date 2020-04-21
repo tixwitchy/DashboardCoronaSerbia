@@ -22,6 +22,8 @@ library(rvest)
 library(tmaptools)
 library(leaflet)
 library(tmap)
+library(viridis)
+library(lubridate)
 
 
 
@@ -42,6 +44,7 @@ url3<-"https://data.gov.rs/sr/datasets/r/fca5fda0-46af-41e2-8005-ef45c4c75e03"
 GET(url3, write_disk(tf <- tempfile(fileext = ".xlsx")))
 covidserbia16apr <- read_excel(tf)
 str(covidserbia16apr)
+covidserbia16apr$OPŠTINA<-toupper(covidserbia16apr$OPŠTINA)
 
 covidserbia16add<-covidserbia16apr%>%
   select(POL,STAROST, OPŠTINA)%>%
@@ -63,7 +66,7 @@ covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="ZEMUN"]="BEOGR
 covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="SURČIN"]="BEOGRAD"
 covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="SOPOT"]="BEOGRAD"
 covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="BARAJEVO"]="BEOGRAD"
-
+covidserbianew2$NazivTeritorije<-toupper(covidserbianew2$NazivTeritorije)
 
 
 covidserbia14.apr<-covidserbianew2%>%
@@ -125,6 +128,37 @@ Belgrademap_joined <- left_join (Belgrade_map, covidserbBelgrade, key.shp = "Naz
 Belgrademap_joined<-Belgrademap_joined%>%
   rename(Broj_zaraženih = n)
 
+#linechart
+covidserbiafortimeline<- read_excel(tf)
+
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="SAVSKI VENAC"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="VOŽDOVAC"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="GROCKA"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="VRAČAR"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="PALILULA"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="NOVI BEOGRAD"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="ČUKARICA"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="ZVEZDARA"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="STARI GRAD"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="RAKOVICA"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="ZEMUN"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="SURČIN"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="SOPOT"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="BARAJEVO"]<-"BEOGRAD"
+covidserbiafortimeline$OPŠTINA<-toupper(covidserbiafortimeline$OPŠTINA)
+
+covidserbiafortimeline<-covidserbiafortimeline%>%
+  mutate(Datum=paste(DAN,MESEC,GODINA,sep = "/"))%>%
+  group_by(OPŠTINA,Datum)%>%
+  summarize(n())
+
+
+
+covidserbiafortimeline$Datum<-dmy(covidserbiafortimeline$Datum)
+
+covidserbiafortimeline<-covidserbiafortimeline%>%
+  mutate(Info=paste("<br>","Grad:",OPŠTINA, "<br>","Datum:",format(Datum,"%d.%m."), "<br>","Broj slučajeva:",`n()`, "<br>"))
+covidserbiafortimeline<- covidserbiafortimeline%>%ungroup()
 
 
 
@@ -161,7 +195,7 @@ valueBox(format(scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ"
 
 Row {data-height=815} 
 -----------------------------------------------------------------------
-### **Mapa sa ukupnim brojem zaraženih po opštinama na dan `r format(Sys.Date(),"%d.%m.")`**
+### **Mapa sa ukupnim brojem zaraženih po opštinama na dan `r format(Sys.Date()-1,"%d.%m.")`**
 
 ```{r}
 
@@ -181,32 +215,60 @@ m
 ```
 
 
-### **Broj testiranih i broj pozitivnih u Srbiji po danima**
+### **Broj zaraženih po danima po gradovima od 16.04.**
+
+
+
 
 ```{r}
-gg <- ggplot(zarazenitestirani) +
-  geom_area(aes(Datum, `BrojTestiranih`,fill="Testirani"))+
-  geom_area(aes(Datum,`BrojZarazenih`,fill= "Pozitivni"))+
- scale_fill_manual(values =  c("#B22222","#4169E1"))+
-  scale_x_date(date_breaks = "1 week",date_labels = "%d.%m.")+
-  ylab("")+
+
+tx <- highlight_key(covidserbiafortimeline)
+gg <- ggplot(tx,aes(Datum, `n()`, group = OPŠTINA,label = Info, color=OPŠTINA)) +
+  geom_point(position = position_dodge(0.2))+
+  geom_line(position = position_dodge(0.2))+ 
+  scale_x_date(date_labels = "%d.%m.")+
+  #geom_jitter(height = 0.05)+
+  scale_color_viridis(discrete = TRUE,option = "C") +
+  ylab("Broj novih slučajeva")+
   xlab("")+
-  theme(
-        legend.title = element_blank(),
-        panel.background = element_blank(),
-       plot.margin = margin(0, 0, 2.2, 0, "cm"),
+  theme(legend.position = "none", 
+        panel.background = element_rect (fill = "lightcyan"),
+        plot.margin = margin(0, 0, 2.2, 0, "cm"),
         plot.caption = element_text()
   )
 
 
+filter <- bscols(
+  filter_select("id", "Izaberi grad", tx, ~OPŠTINA),
+  ggplotly(gg,tooltip = "label"),
+  widths = c(12, 12)
+)
 
-  ggplotly( gg) %>%
-  layout(legend = list(
-      orientation = "h"), annotations = 
- list(x = 1, y = -0.3, text = "Podaci preuzeti sa: <a href=\"https://covid19.rs/статистички-подаци-о-коронавирусу/\">covid19.rs</a>", 
-      showarrow = F, xref='paper', yref='paper', 
-      xanchor='right', yanchor='auto', xshift=0, yshift=0,
-      font=list(size=9)))
+filter
+  
+#gg <- ggplot(zarazenitestirani) +
+#  geom_area(aes(Datum, `BrojTestiranih`,fill="Testirani"))+
+#  geom_area(aes(Datum,`BrojZarazenih`,fill= "Pozitivni"))+
+# scale_fill_manual(values =  c("#B22222","#4169E1"))+
+ # scale_x_date(date_breaks = "1 week",date_labels = "%d.%m.")+
+#  ylab("")+
+ # xlab("")+
+  #theme(
+    #    legend.title = element_blank(),
+     #   panel.background = element_blank(),
+     #  plot.margin = margin(0, 0, 2.2, 0, "cm"),
+      #  plot.caption = element_text()
+ # )
+
+
+
+ # ggplotly( gg) %>%
+ # layout(legend = list(
+     # orientation = "h"), annotations = 
+# list(x = 1, y = -0.3, text = "Podaci preuzeti sa: <a href=\"https://covid19.rs/статистички-подаци-о-коронавирусу/\">covid19.rs</a>", 
+     # showarrow = F, xref='paper', yref='paper', 
+      #xanchor='right', yanchor='auto', xshift=0, yshift=0,
+     # font=list(size=9)))
 
 ```
 
@@ -215,7 +277,7 @@ Beograd i informacije o podacima
 
 Row {data-height=1000} 
 -----------------------------------------------------------------------
-### **Broj slučajeva po opštinama u Beogradu na dan `r format(Sys.Date(),"%d.%m.")`** 
+### **Broj slučajeva po opštinama u Beogradu na dan `r format(Sys.Date()-1,"%d.%m.")`** 
 
 ```{r}
 
@@ -241,7 +303,7 @@ map <- tm_shape(Belgrademap_joined)+
 
 Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih, kao i o broju testiranih i pozitivnih za svaki dan od pojave prvog slučaja u Srbiji. Ovi podaci se ažuriraju odmah nakon konferencija za štampu kriznog štaba. Podaci o izlečenim se ažuriraju na osnovu izjava zdravstvenih stručnjaka sa ovih konferencija jer ih nema na drugim mestima. 
 
-Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje je bilo `r format(Sys.Date(),"%d.%m.")` Ti podaci se koriste za mape za Beograd i za Srbiju. 
+Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje je bilo `r format(Sys.Date()-1,"%d.%m.")` Ti podaci se koriste za mape za Beograd i za Srbiju. Zbog neredovnog ažuriranja podaci za broj zaraženih po gradovima po danu kreću se od 16. aprila.
 
 Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam daju bar male naznake pojedinih trendova koji mogu da se prate. 
 
