@@ -3,9 +3,11 @@ title: "COVID-19 Srbija - Statistika "
 author: "za dan"
 output: 
   flexdashboard::flex_dashboard:
+    theme: flatly
     orientation: rows
     vertical_layout: fill
-date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
+    
+date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
 
 ---
 
@@ -164,7 +166,7 @@ covidserbiafortimeline<- covidserbiafortimeline%>%ungroup()
 
 ```
 
-Pregled
+Pregled 
 ==================================================
 
 Row {data-height=185} 
@@ -245,7 +247,9 @@ filter <- bscols(
 )
 
 filter
-  
+
+
+
 #gg <- ggplot(zarazenitestirani) +
 #  geom_area(aes(Datum, `BrojTestiranih`,fill="Testirani"))+
 #  geom_area(aes(Datum,`BrojZarazenih`,fill= "Pozitivni"))+
