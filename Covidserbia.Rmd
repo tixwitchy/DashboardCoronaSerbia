@@ -242,13 +242,13 @@ gg <- ggplot(tx,aes(Datum, `n()`, group = OPŠTINA,label = Info, color=OPŠTINA)
 
 filter <- bscols(
   filter_select("id", "Izaberi grad", tx, ~OPŠTINA),
-  ggplotly(gg,tooltip = "label"),
+  ggplotly(gg,tooltip = "label",height = 400),
   widths = c(12, 12)
 )
 
 filter
 
-
+filter$attribs
 
 #gg <- ggplot(zarazenitestirani) +
 #  geom_area(aes(Datum, `BrojTestiranih`,fill="Testirani"))+
