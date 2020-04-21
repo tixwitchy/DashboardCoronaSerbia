@@ -88,9 +88,9 @@ covidserbialonglat1<-left_join(covidserbia14.apr,municipalitiescsv,by="NazivTeri
 duplicated(covidserbialonglat1)
 covidserbialonglat1<- covidserbialonglat1[!duplicated(covidserbialonglat1), ]
 
-
-
-
+#nisk banja
+covidserbialonglat1[80,3]<-22.0044
+covidserbialonglat1[80,4]<-43.2982
 
 
 #scraping number of dead
@@ -242,13 +242,11 @@ gg <- ggplot(tx,aes(Datum, `n()`, group = OPŠTINA,label = Info, color=OPŠTINA)
 
 filter <- bscols(
   filter_select("id", "Izaberi grad", tx, ~OPŠTINA),
-  ggplotly(gg,tooltip = "label",height = 450),
+  ggplotly(gg,tooltip = "label"),
   widths = c(12, 12)
 )
 
 filter
-
-filter$attribs
 
 #gg <- ggplot(zarazenitestirani) +
 #  geom_area(aes(Datum, `BrojTestiranih`,fill="Testirani"))+
