@@ -244,7 +244,7 @@ gg <- ggplot(tx,aes(Datum, `n()`, group = OPŠTINA,label = Info, color=OPŠTINA)
         plot.caption = element_text()
   )
 
-pp<-ggplotly(gg,tooltip = "label",height=450)%>%layout(legend = list(
+pp<-ggplotly(gg,tooltip = "label",height=400)%>%layout(legend = list(
      orientation = "h"), annotations = 
 list(x = 1, y = -0.2, text = "Duplim klikom na grafikon resetujete zoom, bolji prikaz na desktop računaru", 
      showarrow = F, xref='paper', yref='paper', 
