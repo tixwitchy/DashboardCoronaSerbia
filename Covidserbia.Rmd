@@ -246,7 +246,7 @@ gg <- ggplot(tx,aes(Datum, `n()`, group = OPŠTINA,label = Info, color=OPŠTINA)
 
 pp<-ggplotly(gg,tooltip = "label",height=400)%>%layout(legend = list(
      orientation = "h"), annotations = 
-list(x = 1, y = -0.2, text = "Duplim klikom na grafikon resetujete zoom, bolji prikaz na desktop računaru", 
+list(x = 1, y = -0.2, text = "*Duplim klikom na grafikon resetujete zoom - bolji prikaz na desktop računaru.", 
      showarrow = F, xref='paper', yref='paper', 
       xanchor='right', yanchor='auto', xshift=0, yshift=0,
      font=list(size=9)))
@@ -318,5 +318,5 @@ Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/ста
 
 Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje je bilo `r format(Sys.Date()-1,"%d.%m.")` Ti podaci se koriste za mape za Beograd i za Srbiju. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
 
-Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam daju bar male naznake pojedinih trendova koji mogu da se prate. 
+Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam daju naznake pojedinih trendova koji mogu da se prate. 
 
