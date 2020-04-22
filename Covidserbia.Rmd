@@ -7,7 +7,7 @@ output:
     orientation: rows
     vertical_layout: fill
     
-date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
+date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
 
 ---
 
@@ -48,6 +48,8 @@ covidserbia16apr <- read_excel(tf)
 str(covidserbia16apr)
 covidserbia16apr$OPŠTINA<-toupper(covidserbia16apr$OPŠTINA)
 
+covidserbia16apr$OPŠTINA[covidserbia16apr$OPŠTINA=="CUPRIJA"]<-"ĆUPRIJA"
+
 covidserbia16add<-covidserbia16apr%>%
   select(POL,STAROST, OPŠTINA)%>%
   rename(NazivTeritorije=OPŠTINA)
@@ -71,6 +73,7 @@ covidserbianew2$NazivTeritorije[covidserbianew2$NazivTeritorije=="BARAJEVO"]="BE
 covidserbianew2$NazivTeritorije<-toupper(covidserbianew2$NazivTeritorije)
 
 
+
 covidserbia14.apr<-covidserbianew2%>%
   group_by(`NazivTeritorije`)%>%
   count(NazivTeritorije)
@@ -87,6 +90,8 @@ municipalitiescsv<-read_csv("longlatcitiesserb.csv",col_names = TRUE)
 covidserbialonglat1<-left_join(covidserbia14.apr,municipalitiescsv,by="NazivTeritorije")
 duplicated(covidserbialonglat1)
 covidserbialonglat1<- covidserbialonglat1[!duplicated(covidserbialonglat1), ]
+
+
 
 #nisk banja
 covidserbialonglat1[80,3]<-22.0044
@@ -110,10 +115,10 @@ scrapingdead1[1]
 
 #zarazeni testirani
 
-zarazenitestirani<-read.csv("zarazenitestirani.csv")
-zarazenitestirani$Datum<-as.Date( zarazenitestirani$Datum)
+#zarazenitestirani<-read.csv("zarazenitestirani.csv")
+#zarazenitestirani$Datum<-as.Date( zarazenitestirani$Datum)
 
-sum(zarazenitestirani$BrojZarazenih)
+#sum(zarazenitestirani$BrojZarazenih)
 
 #shapefile
 
@@ -131,7 +136,7 @@ Belgrademap_joined<-Belgrademap_joined%>%
   rename(Broj_zaraženih = n)
 
 #linechart
-covidserbiafortimeline<- read_excel(tf)
+covidserbiafortimeline<- covidserbia16apr
 
 covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="SAVSKI VENAC"]<-"BEOGRAD"
 covidserbiafortimeline$OPŠTINA[covidserbiafortimeline$OPŠTINA=="VOŽDOVAC"]<-"BEOGRAD"
@@ -206,7 +211,7 @@ m<-leaflet(covidserbialonglat1) %>%
   addTiles(attribution = paste(
     "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Podaci preuzeti sa: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">data.gov.rs</a>","Kontakt za dashboard:<a href=\"mailto:etijana@gmail.com\">Tijana Blagojev </a"))%>%
   setView(lng = 21.0059, lat = 44.0165, zoom = 7)%>%
-  addCircles(radius = ~`n`^(.5)*350,weight = 1, color = "black",
+  addCircles(radius = ~`n`^(.5)*350, weight = 1, color = "black",
              fillColor = "red", fillOpacity = 0.6,  
              popup = ~paste("Opština:", `NazivTeritorije`, "<br>","Broj slučajeva:",`n`, "<br>"))
 
