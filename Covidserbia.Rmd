@@ -7,7 +7,7 @@ output:
     orientation: rows
     vertical_layout: fill
     
-date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
+date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
 
 ---
 
