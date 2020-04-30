@@ -83,7 +83,7 @@ covidserbia14.apr<-covidserbianew2%>%
 #importing longitude and latitude
 municipalitiescsv<-read_csv("longlatcitiesserb.csv",col_names = TRUE)
 
-
+municipalitiescsv<-add_row(municipalitiescsv, NazivTeritorije="NIŠKA BANJA",lng=22.0044,lat=43.2982)
 
 
 
@@ -93,9 +93,7 @@ covidserbialonglat1<- covidserbialonglat1[!duplicated(covidserbialonglat1), ]
 
 
 
-#nisk banja
-covidserbialonglat1[83,3]<-22.0044
-covidserbialonglat1[83,4]<-43.2982
+
 
 
 #scraping number of dead
