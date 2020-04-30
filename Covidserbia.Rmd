@@ -202,7 +202,7 @@ valueBox(format(scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ"
 
 Row {data-height=815} 
 -----------------------------------------------------------------------
-### **Mapa sa ukupnim brojem zaraženih po opštinama na dan `r format(Sys.Date()-1,"%d.%m.")`**
+### **Mapa sa ukupnim brojem zaraženih po opštinama na dan `r format(Sys.Date(),"%d.%m.")`**
 
 ```{r}
 
@@ -291,7 +291,7 @@ Beograd i informacije o podacima
 
 Row {data-height=1000} 
 -----------------------------------------------------------------------
-### **Broj slučajeva po opštinama u Beogradu na dan `r format(Sys.Date()-1,"%d.%m.")`** 
+### **Broj slučajeva po opštinama u Beogradu na dan `r format(Sys.Date(),"%d.%m.")`** 
 
 ```{r}
 
@@ -317,7 +317,7 @@ map <- tm_shape(Belgrademap_joined)+
 
 Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih, izlečenih kao i o broju testiranih i pozitivnih za svaki dan od pojave prvog slučaja u Srbiji. Ovi podaci se ažuriraju odmah nakon konferencija za štampu kriznog štaba. 
 
-Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje je bilo `r format(Sys.Date()-1,"%d.%m.")` Ti podaci se koriste za grafikon i mape. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
+Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka. Poslednje ažuriranje je bilo `r format(Sys.Date(),"%d.%m.")` Ti podaci se koriste za grafikon i mape. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
 
 Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam daju naznake pojedinih trendova koji mogu da se prate. 
 
