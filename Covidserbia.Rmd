@@ -209,7 +209,7 @@ m<-leaflet(covidserbialonglat1) %>%
   addTiles(attribution = paste(
     "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Podaci preuzeti sa: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">data.gov.rs</a>","Kontakt za dashboard:<a href=\"mailto:etijana@gmail.com\">Tijana Blagojev </a"))%>%
   setView(lng = 21.0059, lat = 44.0165, zoom = 7)%>%
-  addCircles(radius = ~`n`^(.5)*300, weight = 1, color = "black",
+  addCircles(radius = ~`n`^(.5)*350, weight = 1, color = "black",
              fillColor = "red", fillOpacity = 0.6,  
              popup  = ~paste("Opština:", `NazivTeritorije`, "<br>","Broj slučajeva:",`n`, "<br>"),highlightOptions = highlightOptions(sendToBack = TRUE))
 
