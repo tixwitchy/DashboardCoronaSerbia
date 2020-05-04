@@ -7,7 +7,7 @@ output:
     orientation: rows
     vertical_layout: fill
     
-date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
+date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
 
 ---
 
@@ -111,6 +111,12 @@ scrapingdead1<- scrapingdead1[which(scrapingdead1== "БРОЈ ИЗЛЕЧЕНИХ
 
 scrapingdead1[1]
 
+scrapingdead2<-my_html1%>%html_nodes("p")%>%html_text
+
+scrapingdead2[which(scrapingdead2=="БРОЈ СМРТНИХ СЛУЧАЈЕВА")-1]
+
+scrapingdead2[which(scrapingdead2=="БРОЈ ЗАРАЖЕНИХ ОСОБА")-1]
+
 #zarazeni testirani
 
 #zarazenitestirani<-read.csv("zarazenitestirani.csv")
@@ -179,7 +185,7 @@ Row {data-height=185}
 ```{r}
 #creation of value box in upper left corner
 
-valueBox(format(scrapingdead[which(scrapingdead=="УКУПАН БРОЈ ОБОЛЕЛИХ")+1],big.mark = ","),color = "#B22222")
+valueBox(scrapingdead2[which(scrapingdead2=="БРОЈ ЗАРАЖЕНИХ ОСОБА")-1],color = "#B22222")
 
 
 ```
@@ -194,7 +200,7 @@ valueBox(str_replace( scrapingdead1[1],"\\.",","),color = "green")#,href="http:/
 ### **Ukupan broj preminulih**
 ```{r}
 
-valueBox(format(scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ")+3], big.mark = ","),color = "black")
+valueBox(scrapingdead2[which(scrapingdead2=="БРОЈ СМРТНИХ СЛУЧАЈЕВА")-1],color = "black")
 ```
 
 
