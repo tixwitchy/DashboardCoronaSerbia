@@ -185,7 +185,7 @@ Row {data-height=185}
 ```{r}
 #creation of value box in upper left corner
 
-valueBox(str_replace(scrapingdead2[which(scrapingdead2=="БРОЈ ЗАРАЖЕНИХ ОСОБА")-1],"\\.",","),color = "#B22222")
+valueBox(str_replace(scrapingdead2[which(scrapingdead2=="УКУПАН БРОЈ РЕГИСТРОВАНИХ СЛУЧАЈЕВА")-1],"\\.",","),color = "#B22222")
 
 
 ```
