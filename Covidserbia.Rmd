@@ -40,7 +40,7 @@ covidserbianewn<-covidserbianew%>%
 
 #adding another day
 
-url3<-"https://data.gov.rs/sr/datasets/r/fca5fda0-46af-41e2-8005-ef45c4c75e03" 
+url3<-"https://data.gov.rs/sr/datasets/r/6516301c-bad7-495a-a0af-549ea981d6f0" 
 
 GET(url3, write_disk(tf <- tempfile(fileext = ".xlsx")))
 covidserbia16apr <- read_excel(tf)
