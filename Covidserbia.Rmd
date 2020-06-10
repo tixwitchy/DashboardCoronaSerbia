@@ -119,7 +119,7 @@ scrapingdead2[which(scrapingdead2=="БРОЈ ЗАРАЖЕНИХ ОСОБА")-1]
 
 #izleceno
 
-izleceni<-as.numeric(str_replace(scrapingdead2[which(scrapingdead2=="УКУПАН БРОЈ РЕГИСТРОВАНИХ СЛУЧАЈЕВА")-1],"\\,",""))-as.numeric(scrapingdead2[which(scrapingdead2=="БРОЈ АКТИВНИХ СЛУЧАЈЕВА")-1])
+izleceni<-as.numeric(str_replace(scrapingdead2[which(scrapingdead2=="УКУПАН БРОЈ РЕГИСТРОВАНИХ СЛУЧАЈЕВА")-1],"\\,",""))-as.numeric(scrapingdead2[which(scrapingdead2=="БРОЈ АКТИВНИХ СЛУЧАЈЕВА")-1])-as.numeric(scrapingdead2[which(scrapingdead2=="БРОЈ СМРТНИХ СЛУЧАЈЕВА")-1])
 
 #zarazeni testirani
 
@@ -323,7 +323,7 @@ map <- tm_shape(Belgrademap_joined)+
 
 ### **Informacije o podacima** {align=justify}
 
-Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih, izlečenih kao i o broju testiranih i pozitivnih za svaki dan od pojave prvog slučaja u Srbiji. Ovi podaci se ažuriraju odmah nakon konferencija za štampu kriznog štaba. 
+Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih i izlečenih. 
 
 Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka i u kojima fale informacije za jedan dan, najverovatnije 15. april. Poslednje ažuriranje je bilo `r format(Sys.Date()-1,"%d.%m.")` Ti podaci se koriste za grafikon i mape. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
 
