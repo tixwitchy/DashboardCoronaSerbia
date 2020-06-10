@@ -7,7 +7,7 @@ output:
     orientation: rows
     vertical_layout: fill
     
-date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
+date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
 
 ---
 
@@ -40,7 +40,7 @@ covidserbianewn<-covidserbianew%>%
 
 #adding another day
 
-url3<-"https://data.gov.rs/sr/datasets/r/6516301c-bad7-495a-a0af-549ea981d6f0" 
+url3<-"https://data.gov.rs/sr/datasets/r/24055cda-b027-486d-9ee8-b4ca20de29f9" 
 
 GET(url3, write_disk(tf <- tempfile(fileext = ".xlsx")))
 covidserbia16apr <- read_excel(tf)
@@ -101,13 +101,13 @@ covidserbialonglat1<- covidserbialonglat1[!duplicated(covidserbialonglat1), ]
 my_html<-read_html("https://covid19.rs/%d1%81%d1%82%d0%b0%d1%82%d0%b8%d1%81%d1%82%d0%b8%d1%87%d0%ba%d0%b8-%d0%bf%d0%be%d0%b4%d0%b0%d1%86%d0%b8-%d0%be-%d0%ba%d0%be%d1%80%d0%be%d0%bd%d0%b0%d0%b2%d0%b8%d1%80%d1%83%d1%81%d1%83/")
 scrapingdead<-my_html%>%html_nodes("p")%>%html_text
 
-scrapingdead[which(scrapingdead=="БРОЈ ПРЕМИНУЛИХ")+3]
+scrapingdead[which(scrapingdead=="УКУПАН БРОЈ ПРЕМИНУЛИХ")+1]
 
 #za izlecene
 my_html1<-read_html("https://covid19.rs/")
 scrapingdead1<-my_html1%>%html_nodes("p")%>%html_text
 
-scrapingdead1<- scrapingdead1[which(scrapingdead1== "БРОЈ ИЗЛЕЧЕНИХ ОСОБА")-1]
+
 
 scrapingdead1[1]
 
@@ -116,6 +116,10 @@ scrapingdead2<-my_html1%>%html_nodes("p")%>%html_text
 scrapingdead2[which(scrapingdead2=="БРОЈ СМРТНИХ СЛУЧАЈЕВА")-1]
 
 scrapingdead2[which(scrapingdead2=="БРОЈ ЗАРАЖЕНИХ ОСОБА")-1]
+
+#izleceno
+
+izleceni<-as.numeric(str_replace(scrapingdead2[which(scrapingdead2=="УКУПАН БРОЈ РЕГИСТРОВАНИХ СЛУЧАЈЕВА")-1],"\\,",""))-as.numeric(scrapingdead2[which(scrapingdead2=="БРОЈ АКТИВНИХ СЛУЧАЈЕВА")-1])
 
 #zarazeni testirani
 
@@ -194,7 +198,7 @@ valueBox(str_replace(scrapingdead2[which(scrapingdead2=="УКУПАН БРОЈ �
 ### **Ukupan broj izlečenih**
 ```{r}
 
-valueBox(str_replace( scrapingdead1[1],"\\.",","),color = "green")#,href="http://rs.n1info.com/Vesti/a582261/Koronavirus-u-Srbiji-Interaktivni-grafikoni-sa-brojem-zarazenih-po-gradovima.html")
+valueBox(format(izleceni[1],big.mark = ","),color = "green")#,href="http://rs.n1info.com/Vesti/a582261/Koronavirus-u-Srbiji-Interaktivni-grafikoni-sa-brojem-zarazenih-po-gradovima.html")
 ```
 
 ### **Ukupan broj preminulih**
