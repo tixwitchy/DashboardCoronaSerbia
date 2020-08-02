@@ -331,5 +331,5 @@ Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je zapo�
 
 Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam ipak daju naznake pojedinih trendova koji mogu da se prate. 
 
-Vrlo je vazno pročitati [analizu](https://javno.rs/analiza/korona-broj-umrlih-i-zarazenih-visestruko-veci-od-zvanicno-saopstenog) koju je [Birn Srbija](https://birnsrbija.rs/o-birnu/)  objavio  22.06. a koja govori o upitnosti verodostojnosti ovih podataka.
+Vrlo je vazno pročitati [analizu](https://javno.rs/analiza/korona-broj-umrlih-i-zarazenih-visestruko-veci-od-zvanicno-saopstenog) koju je [Birn Srbija](https://birnsrbija.rs/o-birnu/)  objavio  22. juna, a koja govori o problemu verodostojnosti ovih podataka.
 
