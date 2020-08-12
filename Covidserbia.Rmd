@@ -7,7 +7,7 @@ output:
     orientation: rows
     vertical_layout: fill
     
-date: '`r format(Sys.Date(),"%d. %m. %Y.")`'
+date: '`r format(Sys.Date()-1,"%d. %m. %Y.")`'
 
 ---
 
@@ -219,7 +219,7 @@ Row {data-height=815}
 
 m<-leaflet(covidserbialonglat1) %>% 
   addTiles(attribution = paste(
-    "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Podaci preuzeti sa: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">data.gov.rs</a>"))%>%#,"Kontakt za dashboard:<a href=\"mailto:etijana@gmail.com\">Tijana Blagojev </a"))%>%
+    "&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors","Podaci preuzeti sa: <a href=\"https://data.gov.rs/sr/datasets/covid-19-zarazheni/\">data.gov.rs</a>","Kontakt za dashboard:<a href=\"mailto:etijana@gmail.com\">Tijana Blagojev </a"))%>%
   setView(lng = 21.0059, lat = 44.0165, zoom = 7)%>%
   addCircles(radius = ~`n`^(.5)*350, weight = 1, color = "black",
              fillColor = "red", fillOpacity = 0.6,  
@@ -327,7 +327,7 @@ map <- tm_shape(Belgrademap_joined)+
 
 Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih i izlečenih. Pošto se broj izlečenih i broj aktivnih slučajeva više zvanično ne saopštava, broj izlečenih predstavlja broj zaraženih manje broj preminulih.
 
-Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka i u kojima fale informacije za jedan dan, najverovatnije 15. april. Poslednje ažuriranje je bilo `r format(Sys.Date()-60,"%d.%m.")` Ti podaci se koriste za grafikon i mape. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
+Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka i u kojima fale informacije za jedan dan, najverovatnije 15. april. Poslednje ažuriranje je bilo `r format(Sys.Date()-63,"%d.%m.")` Ti podaci se koriste za grafikon i mape. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
 
 Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam ipak daju naznake pojedinih trendova koji mogu da se prate. 
 
