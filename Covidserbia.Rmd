@@ -121,7 +121,7 @@ scrapingdead3 <- gsub(",","",scrapingdead2)
 #as.numeric(as.character(str_replace(scrapingdead2[which(scrapingdead2=="УКУПАН БРОЈ РЕГИСТРОВАНИХ СЛУЧАЈЕВА")-1],"\\,","")))
 
 
-izleceni<-26738-as.numeric(scrapingdead2[which(scrapingdead2=="БРОЈ СМРТНИХ СЛУЧАЈЕВА")-1])
+izleceni<-as.numeric(as.character(str_replace(scrapingdead2[which(scrapingdead2=="УКУПАН БРОЈ РЕГИСТРОВАНИХ СЛУЧАЈЕВА")-1],"\\,","")))-as.numeric(scrapingdead2[which(scrapingdead2=="БРОЈ СМРТНИХ СЛУЧАЈЕВА")-1])
 
 #zarazeni testirani
 
@@ -327,7 +327,7 @@ map <- tm_shape(Belgrademap_joined)+
 
 Ovaj dashboard prikuplja podatke sa sajta [Covid19.rs](https://covid19.rs/статистички-подаци-о-коронавирусу/) o ukupnom broju zaraženih, umrlih i izlečenih. Pošto se broj izlečenih i broj aktivnih slučajeva više zvanično ne saopštava, broj izlečenih predstavlja broj zaraženih manje broj preminulih.
 
-Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka i u kojima fale informacije za jedan dan, najverovatnije 15. april. Poslednje ažuriranje je bilo `r format(Sys.Date()-72,"%d.%m.")` Ti podaci se koriste za grafikon i mape. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
+Sajt [data.gov.rs](https://data.gov.rs/sr/datasets/covid-19-zarazheni/) je započeo dobru praksu objavljivanja podataka koji se odnose na geografski raspored zaraženih zajedno sa vremenskom odrednicom ali oni su se, nažalost, ažurirali do 29. marta. To se promenilo 14. aprila kada su objavljeni podaci koji su u drugačijem formatu u odnosu na prethodni skup podataka i u kojima fale informacije za jedan dan, najverovatnije 15. april. Poslednje ažuriranje je bilo `r format(Sys.Date()-73,"%d.%m.")` Ti podaci se koriste za grafikon i mape. Zbog neredovnog ažuriranja, podaci za broj zaraženih po gradovima po danu počinju od 16. aprila.
 
 Ovakav pristup otvaranju podataka dovodi do nemogućnosti da se urade valjane analize i doprinese transparentnom praćenju procesa tokom pandemije. Sa druge strane, ti isti podaci nam ipak daju naznake pojedinih trendova koji mogu da se prate. 
 
