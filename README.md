@@ -1,4 +1,4 @@
-# DashboardCoronaSerbia
+# DashboardCovid19Serbia
 
 Ovo je Dashboard sa vizuelnim prikazom informacija o razvoju epidemije Covid-19 u Srbiji. Podaci se preuzimaju sa portala data.gov.rs i covid19.rs. Zbog prestanka azuriranja podataka na sajtu data.gov.rs azuriranje ovog sajta je prekinuto.
 
